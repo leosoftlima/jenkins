@@ -1,0 +1,26 @@
+
+sudo: required
+language: java
+
+jdk:
+  - openjdk8
+
+script:
+  - mvn -DskipTests=true package
+
+before_deploy:
+    - mkdir MiningBuild
+    - find . -name '*.jar' -exec cp {} ./MiningBuild \;
+    - cd /home/travis/build/leosoftlima/jenkins/MiningBuild
+    - tar -zcvf result.tar.gz *
+deploy:
+  provider: releases
+  api_key: $GITHUB_TOKEN
+  file: result.tar.gz
+  name: fetchjar-4f89f013eadafc05b24c473494800d9530308505
+  file_glob: true
+  overwrite: false
+  skip_cleanup: true
+  on:
+    all_branches: true 
+            
